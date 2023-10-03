@@ -23,9 +23,11 @@ export class UserRolesGuard implements CanActivate {
 
     console.log({ validRoles });
 
-    if (!validRoles || validRoles.length === 0) {
+    if (!validRoles) {
       return true;
     }
+
+    if (validRoles.length === 0) return true;
 
     const req = context.switchToHttp().getRequest();
     const user = req.user;

@@ -33,7 +33,7 @@ export class AuthService {
       delete user.password;
 
       // TODO: retornanr JSON web TOKEN
-      return { ...user, token: this.getJwtToken({ id: user.id }) };
+      return { user: user, token: this.getJwtToken({ id: user.id }) };
     } catch (error) {
       this.handleDBError(error);
     }
@@ -50,7 +50,7 @@ export class AuthService {
         throw new UnauthorizedException('Credenciales invalidas');
       }
 
-      return { ...user, token: this.getJwtToken({ id: user.id }) };
+      return { user, token: this.getJwtToken({ id: user.id }) };
     } catch (error) {
       this.handleDBError(error);
     }
@@ -70,6 +70,19 @@ export class AuthService {
 
   remove(id: number) {
     return `This action removes a #${id} auth`;
+  }
+
+  async getUserByToken(token?: string) {
+    try {
+      if (!token) {
+        throw new BadRequestException('Token not found');
+      }
+      const response = this.jwtService.verify(token);
+      const user = await this.authRepository.findOneBy({ id: response.id });
+      return user;
+    } catch (error) {
+      this.handleDBError(error);
+    }
   }
 
   private handleDBError(error: any) {
