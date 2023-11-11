@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-auth.dto';
@@ -56,19 +57,42 @@ export class AuthService {
     }
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async getAllUser() {
+    try {
+      const allUsers = await this.authRepository.find();
+      return allUsers;
+    } catch (error) {
+      this.handleDBError(error);
+    }
   }
 
   findOne(id: number) {
     return `This action returns a #${id} auth`;
   }
 
-  update(id: number, updateUserDto: UpdateUserhDto) {
-    return `This action updates a #${id} auth`;
+  async update(id: string, updateUserDto: UpdateUserhDto) {
+    try {
+      const user = await this.authRepository.preload({
+        id,
+        ...updateUserDto,
+      });
+      if (!user) throw new NotFoundException(`No existe id: ${id}`);
+      await this.authRepository.update(id, updateUserDto);
+      return user;
+    } catch (error) {
+      this.handleDBError(error);
+    }
   }
 
-  remove(id: number) {
+  async remove(id: string) {
+    try {
+      const user = await this.authRepository.findOneBy({ id });
+      if (!user) throw new NotFoundException(`No existe id: ${id}`);
+      await this.authRepository.delete(id);
+      return user;
+    } catch (error) {
+      this.handleDBError(error);
+    }
     return `This action removes a #${id} auth`;
   }
 
