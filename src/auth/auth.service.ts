@@ -24,10 +24,26 @@ export class AuthService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-      const { password, ...userData } = createUserDto;
+      const { password, username, lastName, ...userData } = createUserDto;
+
+      const regex = /[^A-Za-z0-9 ]/;
+      if (regex.test(username)) {
+        throw new BadRequestException(
+          'El Nombre no puede contener caracteres especiales',
+        );
+      }
+
+      if (regex.test(lastName)) {
+        throw new BadRequestException(
+          'El Apellido no puede contener caracteres especiales',
+        );
+      }
+
       const user = this.authRepository.create({
         ...userData,
         password: bcrypt.hashSync(password, 10),
+        username: username,
+        lastName: lastName,
       });
 
       await this.authRepository.save(user);
@@ -47,7 +63,6 @@ export class AuthService {
         where: { email },
         select: { email: true, password: true, id: true },
       });
-      console.log({ user });
       if (!user || !bcrypt.compareSync(password, user.password)) {
         throw new UnauthorizedException('Credenciales invalidas');
       }
@@ -73,6 +88,18 @@ export class AuthService {
 
   async update(id: string, updateUserDto: UpdateUserhDto) {
     try {
+      const { username, lastName } = updateUserDto;
+      const regex = /[^A-Za-z0-9 ]/;
+      if (regex.test(username)) {
+        throw new BadRequestException(
+          'El Nombre no puede contener caracteres especiales',
+        );
+      }
+      if (regex.test(lastName)) {
+        throw new BadRequestException(
+          'El Apellido no puede contener caracteres especiales',
+        );
+      }
       const user = await this.authRepository.preload({
         id,
         ...updateUserDto,
