@@ -4,7 +4,6 @@ import {
   IsUUID,
   IsOptional,
   IsString,
-  IsArray,
   IsInt,
   IsPositive,
   IsBoolean,
@@ -16,9 +15,8 @@ export class UpdateFuenteDto extends PartialType(CreateFuenteDto) {
   @IsOptional()
   id: string;
 
-  @IsString({ each: true })
-  @IsArray()
-  editores: string[];
+  @IsString()
+  editores: string;
 
   @IsInt()
   @IsPositive()

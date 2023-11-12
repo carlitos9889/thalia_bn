@@ -1,5 +1,4 @@
 import {
-  IsArray,
   IsBoolean,
   IsInt,
   IsOptional,
@@ -14,9 +13,8 @@ export class CreateFuenteDto {
   @IsOptional()
   id: string;
 
-  @IsString({ each: true })
-  @IsArray()
-  editores: string[];
+  @IsString()
+  editores: string;
 
   @IsInt()
   @IsPositive()
@@ -30,6 +28,8 @@ export class CreateFuenteDto {
   @MinLength(2)
   materia: string;
 
+  @IsString()
+  @MinLength(2)
   organization: string;
 
   @IsString()

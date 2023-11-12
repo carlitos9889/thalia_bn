@@ -21,10 +21,8 @@ export class Fuente {
   })
   isOpen: boolean;
 
-  @Column('text', {
-    array: true,
-  })
-  editores: string[];
+  @Column('text')
+  editores: string;
 
   @Column('text')
   materia: string;

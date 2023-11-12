@@ -22,6 +22,7 @@ export class FuentesService {
         ...createFuenteDto,
       });
       await this.fuenteRepository.save(fuente);
+      return fuente;
     } catch (error) {
       this.handleDBError(error);
     }
@@ -29,7 +30,7 @@ export class FuentesService {
 
   async findAll() {
     try {
-      const fuentes = await this.findAll();
+      const fuentes = await this.fuenteRepository.find();
       return fuentes;
     } catch (error) {
       this.handleDBError(error);
@@ -64,6 +65,7 @@ export class FuentesService {
       const fuente = await this.fuenteRepository.findBy({ id });
       if (!fuente) throw new NotFoundException(`No existe fuente id: ${id}`);
       await this.fuenteRepository.delete(id);
+      return fuente;
     } catch (error) {
       this.handleDBError(error);
     }
