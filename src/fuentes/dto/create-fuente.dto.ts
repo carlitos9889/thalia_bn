@@ -5,10 +5,15 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  IsUUID,
   MinLength,
 } from 'class-validator';
 
 export class CreateFuenteDto {
+  @IsUUID()
+  @IsOptional()
+  id: string;
+
   @IsString({ each: true })
   @IsArray()
   editores: string[];

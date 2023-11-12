@@ -1,26 +1,78 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateFuenteDto } from './dto/create-fuente.dto';
 import { UpdateFuenteDto } from './dto/update-fuente.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Fuente } from './entities/fuente.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class FuentesService {
-  create(createFuenteDto: CreateFuenteDto) {
-    return 'This action adds a new fuente';
+  constructor(
+    @InjectRepository(Fuente)
+    private readonly fuenteRepository: Repository<Fuente>,
+  ) {}
+  async create(createFuenteDto: CreateFuenteDto) {
+    try {
+      const fuente = this.fuenteRepository.create({
+        ...createFuenteDto,
+      });
+      await this.fuenteRepository.save(fuente);
+    } catch (error) {
+      this.handleDBError(error);
+    }
   }
 
-  findAll() {
-    return `This action returns all fuentes`;
+  async findAll() {
+    try {
+      const fuentes = await this.findAll();
+      return fuentes;
+    } catch (error) {
+      this.handleDBError(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} fuente`;
+  async findOne(id: string) {
+    try {
+      const fuente = await this.fuenteRepository.findBy({ id });
+      return fuente;
+    } catch (error) {
+      this.handleDBError(error);
+    }
   }
 
-  update(id: number, updateFuenteDto: UpdateFuenteDto) {
-    return `This action updates a #${id} fuente`;
+  async update(id: string, updateFuenteDto: UpdateFuenteDto) {
+    try {
+      const fuente = await this.fuenteRepository.preload({
+        id,
+        ...updateFuenteDto,
+      });
+      if (!fuente) throw new NotFoundException(`No existe fuente id: ${id}`);
+      await this.fuenteRepository.save(fuente);
+      return fuente;
+    } catch (error) {
+      this.handleDBError(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} fuente`;
+  async remove(id: string) {
+    try {
+      const fuente = await this.fuenteRepository.findBy({ id });
+      if (!fuente) throw new NotFoundException(`No existe fuente id: ${id}`);
+      await this.fuenteRepository.delete(id);
+    } catch (error) {
+      this.handleDBError(error);
+    }
+  }
+
+  private handleDBError(error: any) {
+    if (error.code === '23505') {
+      throw new BadRequestException(error.detail);
+    }
+    throw new InternalServerErrorException(error);
   }
 }

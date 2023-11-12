@@ -47,6 +47,7 @@ export class AuthService {
         where: { email },
         select: { email: true, password: true, id: true },
       });
+      console.log({ user });
       if (!user || !bcrypt.compareSync(password, user.password)) {
         throw new UnauthorizedException('Credenciales invalidas');
       }
@@ -77,7 +78,7 @@ export class AuthService {
         ...updateUserDto,
       });
       if (!user) throw new NotFoundException(`No existe id: ${id}`);
-      await this.authRepository.update(id, updateUserDto);
+      await this.authRepository.save(user);
       return user;
     } catch (error) {
       this.handleDBError(error);
