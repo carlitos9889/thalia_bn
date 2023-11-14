@@ -24,8 +24,8 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  // @RoleProtected(ValidRoles.admin)
-  // @UseGuards(AuthGuard(), UserRolesGuard)
+  @RoleProtected(ValidRoles.admin)
+  @UseGuards(AuthGuard(), UserRolesGuard)
   create(@Body() createUserDto: CreateUserDto) {
     return this.authService.create(createUserDto);
   }
