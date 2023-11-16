@@ -14,6 +14,7 @@ export class CreateFuenteDto {
   id: string;
 
   @IsString()
+  @MinLength(1)
   editores: string;
 
   @IsInt()
@@ -25,18 +26,22 @@ export class CreateFuenteDto {
   isOpen?: boolean;
 
   @IsString()
-  @MinLength(2)
+  @MinLength(1)
   materia: string;
 
   @IsString()
-  @MinLength(2)
+  @MinLength(1)
   organization: string;
 
   @IsString()
-  @MinLength(2)
+  @MinLength(1)
   title: string;
 
   @IsString()
-  @MinLength(2)
+  @MinLength(1)
   url: string;
+
+  @IsString()
+  @MinLength(1)
+  ejesTematicos: string;
 }

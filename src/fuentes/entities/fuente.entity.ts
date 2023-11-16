@@ -30,5 +30,8 @@ export class Fuente {
   @Column('text')
   url: string;
 
+  @Column('text')
+  ejesTematicos: string;
+
   //   ID user
 }

@@ -26,7 +26,7 @@ export class AuthService {
     try {
       const { password, username, lastName, ...userData } = createUserDto;
 
-      const regex = /[^A-Za-z0-9 ]/;
+      const regex = /[^A-Za-z ]/;
       if (regex.test(username)) {
         throw new BadRequestException(
           'El Nombre no puede contener caracteres especiales',
@@ -89,7 +89,7 @@ export class AuthService {
   async update(id: string, updateUserDto: UpdateUserhDto) {
     try {
       const { username, lastName } = updateUserDto;
-      const regex = /[^A-Za-z0-9 ]/;
+      const regex = /[^A-Za-z ]/;
       if (regex.test(username)) {
         throw new BadRequestException(
           'El Nombre no puede contener caracteres especiales',
