@@ -18,6 +18,13 @@ export class FuentesService {
   ) {}
   async create(createFuenteDto: CreateFuenteDto) {
     try {
+      const { editores } = createFuenteDto;
+      const regex = /[^A-Za-z ]/;
+      if (regex.test(editores)) {
+        throw new BadRequestException(
+          'El nombre del editor no puede conteneter caracteres especiales',
+        );
+      }
       const fuente = this.fuenteRepository.create({
         ...createFuenteDto,
       });
