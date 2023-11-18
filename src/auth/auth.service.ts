@@ -82,8 +82,13 @@ export class AuthService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  async findOne(id: string) {
+    try {
+      const user = await this.authRepository.findOneBy({ id });
+      return user;
+    } catch (error) {
+      this.handleDBError(error);
+    }
   }
 
   async update(id: string, updateUserDto: UpdateUserhDto) {
