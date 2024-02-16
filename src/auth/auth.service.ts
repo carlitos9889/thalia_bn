@@ -39,9 +39,12 @@ export class AuthService {
         );
       }
 
+      const passwordCrypt = bcrypt.hashSync(password, 10);
+      console.log({ passwordCrypt });
+
       const user = this.authRepository.create({
         ...userData,
-        password: bcrypt.hashSync(password, 10),
+        password: passwordCrypt,
         username: username,
         lastName: lastName,
       });
@@ -49,7 +52,6 @@ export class AuthService {
       await this.authRepository.save(user);
       delete user.password;
 
-      // TODO: retornanr JSON web TOKEN
       return { user: user, token: this.getJwtToken({ id: user.id }) };
     } catch (error) {
       this.handleDBError(error);
