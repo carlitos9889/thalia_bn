@@ -33,5 +33,10 @@ export class Fuente {
   @Column('text')
   ejesTematicos: string;
 
+  @Column('boolean', {
+    default: true,
+  })
+  is_monitoring: boolean;
+
   //   ID user
 }

@@ -26,17 +26,24 @@ export class UpdateFuenteDto extends PartialType(CreateFuenteDto) {
   @IsOptional()
   isOpen?: boolean;
 
+  @IsBoolean()
+  @IsOptional()
+  is_monitoring?: boolean;
+
   @IsString()
   @MinLength(2)
+  @IsOptional()
   materia: string;
 
   organization: string;
 
   @IsString()
   @MinLength(2)
+  @IsOptional()
   title: string;
 
   @IsString()
+  @IsOptional()
   @MinLength(2)
   url: string;
 }
