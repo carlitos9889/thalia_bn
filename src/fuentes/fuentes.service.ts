@@ -36,9 +36,19 @@ export class FuentesService {
   }
 
   async findAll() {
+    const client = new Client({
+      host: 'localhost',
+      port: 5432,
+      database: 'db',
+      user: 'postgres',
+      password: 'my_secret_password',
+    });
+    await client.connect();
+    const query =
+      'SELECT id, title, organization, frequency, is_monitoring, editores, materia, url, "ejesTematicos" FROM public.api_fuente';
     try {
-      const fuentes = await this.fuenteRepository.find();
-      return fuentes;
+      const result = await client.query(query);
+      return result.rows;
     } catch (error) {
       this.handleDBError(error);
     }
