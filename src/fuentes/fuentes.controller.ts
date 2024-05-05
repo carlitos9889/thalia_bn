@@ -21,8 +21,13 @@ export class FuentesController {
   }
 
   @Get('get-all-fuentes')
-  findAll() {
+  async findAll() {
     return this.fuentesService.findAll();
+  }
+
+  @Get('get-all-registers')
+  allRegisters() {
+    return this.fuentesService.allRegisters();
   }
 
   @Get(':id')
